@@ -1,9 +1,8 @@
 build:
-	go build -gcflags="all=-N -l" -o ~/.terraform.d/plugins/registry.terraform.io/disc/pritunl/0.0.1/darwin_arm64/terraform-provider-pritunl_v0.0.1 main.go
+	go build -gcflags="all=-N -l" -o ~/.terraform.d/plugins/registry.terraform.io/maulid7/pritunl/0.0.1/darwin_arm64/terraform-provider-pritunl_v0.0.1 main.go
 
 generate-docs:
-	go get github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
-	go generate
+	cd tools; go generate .
 
 test:
 	@docker rm tf_pritunl_acc_test -f || true

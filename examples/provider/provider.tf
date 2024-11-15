@@ -2,7 +2,7 @@ terraform {
   required_providers {
     pritunl = {
       version = "~> 0.0.1"
-      source  = "disc/pritunl"
+      source  = "maulid7/pritunl"
     }
   }
 }
@@ -57,22 +57,22 @@ resource "pritunl_server" "test" {
 resource "pritunl_route" "test" {
   server_id = pritunl_server.test.id
 
-  network     = "8.8.8.8/32"
-  comment   = "Google DNS"
-  nat       = false 
+  network = "8.8.8.8/32"
+  comment = "Google DNS"
+  nat     = false
 }
 
 resource "pritunl_route" "test2" {
   server_id = pritunl_server.test.id
 
-  network     = "1.1.1.1/32"
-  comment   = "CF DNS"
-  nat       = true 
+  network = "1.1.1.1/32"
+  comment = "CF DNS"
+  nat     = true
 }
 
 resource "pritunl_route" "test3" {
   server_id = pritunl_server.test.id
 
-  network   = "1.2.3.5/32"
-  nat       = false 
+  network = "1.2.3.5/32"
+  nat     = false
 }

@@ -6,7 +6,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/disc/terraform-provider-pritunl/internal/pritunl"
+	"github.com/maulid7/terraform-provider-pritunl/internal/pritunl"
 	"github.com/hashicorp/go-cty/cty"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
