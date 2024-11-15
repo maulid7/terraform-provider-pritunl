@@ -8,11 +8,11 @@ terraform {
 }
 
 provider "pritunl" {
-  url    = "https://localhost"
-  token  = "api-token"
-  secret = "api-secret"
+  url    = var.pritunl_url
+  token  = var.pritunl_api_token
+  secret = var.pritunl_api_secret
 
-  insecure         = false
+  insecure         = var.pritunl_insecure
   connection_check = true
 }
 
@@ -51,23 +51,28 @@ resource "pritunl_server" "test" {
     pritunl_organization.admins.id,
   ]
 
-  route {
-    network = "10.0.0.0/24"
-    comment = "Private network #1"
-    nat     = true
-  }
+  status = "online"
+}
 
-  route {
-    network = "10.2.0.0/24"
-    comment = "Private network #2"
-    nat     = false
-  }
+resource "pritunl_route" "test" {
+  server_id = pritunl_server.test.id
 
-  route {
-    network = "10.3.0.0/32"
-    comment = "Private network #3"
-    nat     = false
-    net_gateway = true
-  }
+  network     = "8.8.8.8/32"
+  comment   = "Google DNS"
+  nat       = false 
+}
 
+resource "pritunl_route" "test2" {
+  server_id = pritunl_server.test.id
+
+  network     = "1.1.1.1/32"
+  comment   = "CF DNS"
+  nat       = true 
+}
+
+resource "pritunl_route" "test3" {
+  server_id = pritunl_server.test.id
+
+  network   = "1.2.3.5/32"
+  nat       = false 
 }

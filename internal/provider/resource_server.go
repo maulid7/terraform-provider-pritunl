@@ -15,7 +15,7 @@ import (
 
 func resourceServer() *schema.Resource {
 	return &schema.Resource{
-		Description: "The organization resource allows managing information about a particular Pritunl server.",
+		Description: "The server resource allows managing information about a particular Pritunl server.",
 		Schema: map[string]*schema.Schema{
 			"name": {
 				Type:        schema.TypeString,
@@ -419,44 +419,44 @@ func resourceServer() *schema.Resource {
 				Computed:    true,
 				Description: "The list of attached hosts to the server",
 			},
-			"route": {
-				Type: schema.TypeList,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"network": {
-							Type:        schema.TypeString,
-							Required:    true,
-							Description: "Network address with subnet to route",
-							ValidateFunc: func(i interface{}, s string) ([]string, []error) {
-								return validation.IsCIDR(i, s)
-							},
-						},
-						"comment": {
-							Type:        schema.TypeString,
-							Required:    false,
-							Optional:    true,
-							Description: "Comment for route",
-						},
-						"nat": {
-							Type:        schema.TypeBool,
-							Required:    false,
-							Optional:    true,
-							Description: "NAT vpn traffic destined to this network",
-							Computed:    true,
-						},
-						"net_gateway": {
-							Type:        schema.TypeBool,
-							Required:    false,
-							Optional:    true,
-							Description: "Net Gateway vpn traffic destined to this network",
-							Computed:    true,
-						},
-					},
-				},
-				Required:    false,
-				Optional:    true,
-				Description: "The list of attached routes to the server",
-			},
+			// "route": {
+			// 	Type: schema.TypeList,
+			// 	Elem: &schema.Resource{
+			// 		Schema: map[string]*schema.Schema{
+			// 			"network": {
+			// 				Type:        schema.TypeString,
+			// 				Required:    true,
+			// 				Description: "Network address with subnet to route",
+			// 				ValidateFunc: func(i interface{}, s string) ([]string, []error) {
+			// 					return validation.IsCIDR(i, s)
+			// 				},
+			// 			},
+			// 			"comment": {
+			// 				Type:        schema.TypeString,
+			// 				Required:    false,
+			// 				Optional:    true,
+			// 				Description: "Comment for route",
+			// 			},
+			// 			"nat": {
+			// 				Type:        schema.TypeBool,
+			// 				Required:    false,
+			// 				Optional:    true,
+			// 				Description: "NAT vpn traffic destined to this network",
+			// 				Computed:    true,
+			// 			},
+			// 			"net_gateway": {
+			// 				Type:        schema.TypeBool,
+			// 				Required:    false,
+			// 				Optional:    true,
+			// 				Description: "Net Gateway vpn traffic destined to this network",
+			// 				Computed:    true,
+			// 			},
+			// 		},
+			// 	},
+			// 	Required:    false,
+			// 	Optional:    true,
+			// 	Description: "The list of attached routes to the server",
+			// },
 			"status": {
 				Type:         schema.TypeString,
 				Required:     false,
@@ -515,11 +515,11 @@ func resourceReadServer(ctx context.Context, d *schema.ResourceData, meta interf
 		return diag.FromErr(err)
 	}
 
-	// get routes
-	routes, err := apiClient.GetRoutesByServer(d.Id())
-	if err != nil {
-		return diag.FromErr(err)
-	}
+	// // get routes
+	// routes, err := apiClient.GetRoutesByServer(d.Id())
+	// if err != nil {
+	// 	return diag.FromErr(err)
+	// }
 
 	// get hosts
 	hosts, err := apiClient.GetHostsByServer(d.Id())
@@ -608,18 +608,18 @@ func resourceReadServer(ctx context.Context, d *schema.ResourceData, meta interf
 		d.Set("groups", groupsList)
 	}
 
-	if len(routes) > 0 {
-		declaredRoutes, ok := d.Get("route").([]interface{})
-		if !ok {
-			return diag.Errorf("failed to parse routes for the server: %s", server.Name)
-		}
+	// if len(routes) > 0 {
+	// 	declaredRoutes, ok := d.Get("route").([]interface{})
+	// 	if !ok {
+	// 		return diag.Errorf("failed to parse routes for the server: %s", server.Name)
+	// 	}
 
-		if len(declaredRoutes) > 0 {
-			routes = matchRoutesWithSchema(routes, declaredRoutes)
-		}
+	// 	if len(declaredRoutes) > 0 {
+	// 		routes = matchRoutesWithSchema(routes, declaredRoutes)
+	// 	}
 
-		d.Set("route", flattenRoutesData(routes))
-	}
+	// 	d.Set("route", flattenRoutesData(routes))
+	// }
 
 	if len(hosts) > 0 {
 		hostsList := make([]string, 0)
@@ -718,19 +718,19 @@ func resourceCreateServer(ctx context.Context, d *schema.ResourceData, meta inte
 		return diag.Errorf("Error on attaching server to the organization: %s", err)
 	}
 
-	if d.HasChange("route") {
-		_, newRoutes := d.GetChange("route")
-		routes := make([]pritunl.Route, 0)
+	// if d.HasChange("route") {
+	// 	_, newRoutes := d.GetChange("route")
+	// 	routes := make([]pritunl.Route, 0)
 
-		for _, v := range newRoutes.([]interface{}) {
-			routes = append(routes, pritunl.ConvertMapToRoute(v.(map[string]interface{})))
-		}
+	// 	for _, v := range newRoutes.([]interface{}) {
+	// 		routes = append(routes, pritunl.ConvertMapToRoute(v.(map[string]interface{})))
+	// 	}
 
-		err = apiClient.AddRoutesToServer(d.Id(), routes)
-		if err != nil {
-			return diag.Errorf("Error on attaching route from the server: %s", err)
-		}
-	}
+	// 	err = apiClient.AddRoutesToServer(d.Id(), routes)
+	// 	if err != nil {
+	// 		return diag.Errorf("Error on attaching route from the server: %s", err)
+	// 	}
+	// }
 
 	if d.HasChange("host_ids") {
 		// delete default host(s) only when host_ids aren't empty
@@ -972,46 +972,46 @@ func resourceUpdateServer(ctx context.Context, d *schema.ResourceData, meta inte
 		}
 	}
 
-	if d.HasChange("route") {
-		oldRoutes, newRoutes := d.GetChange("route")
+	// if d.HasChange("route") {
+	// 	oldRoutes, newRoutes := d.GetChange("route")
 
-		newRoutesMap := make(map[string]pritunl.Route, 0)
-		for _, v := range newRoutes.([]interface{}) {
-			route := pritunl.ConvertMapToRoute(v.(map[string]interface{}))
-			newRoutesMap[route.GetID()] = route
-		}
-		oldRoutesMap := make(map[string]pritunl.Route, 0)
-		for _, v := range oldRoutes.([]interface{}) {
-			route := pritunl.ConvertMapToRoute(v.(map[string]interface{}))
-			oldRoutesMap[route.GetID()] = route
-		}
+	// 	newRoutesMap := make(map[string]pritunl.Route, 0)
+	// 	for _, v := range newRoutes.([]interface{}) {
+	// 		route := pritunl.ConvertMapToRoute(v.(map[string]interface{}))
+	// 		newRoutesMap[route.GetID()] = route
+	// 	}
+	// 	oldRoutesMap := make(map[string]pritunl.Route, 0)
+	// 	for _, v := range oldRoutes.([]interface{}) {
+	// 		route := pritunl.ConvertMapToRoute(v.(map[string]interface{}))
+	// 		oldRoutesMap[route.GetID()] = route
+	// 	}
 
-		for _, route := range newRoutesMap {
-			if _, found := oldRoutesMap[route.GetID()]; found {
-				// update or skip
-				err = apiClient.UpdateRouteOnServer(d.Id(), route)
-				if err != nil {
-					return diag.Errorf("Error on updating route on the server: %s", err)
-				}
-			} else {
-				// add route
-				err = apiClient.AddRouteToServer(d.Id(), route)
-				if err != nil {
-					return diag.Errorf("Error on attaching route from the server: %s", err)
-				}
-			}
-		}
+	// 	for _, route := range newRoutesMap {
+	// 		if _, found := oldRoutesMap[route.GetID()]; found {
+	// 			// update or skip
+	// 			err = apiClient.UpdateRouteOnServer(d.Id(), route)
+	// 			if err != nil {
+	// 				return diag.Errorf("Error on updating route on the server: %s", err)
+	// 			}
+	// 		} else {
+	// 			// add route
+	// 			_, err = apiClient.AddRouteToServer(d.Id(), route)
+	// 			if err != nil {
+	// 				return diag.Errorf("Error on attaching route from the server: %s", err)
+	// 			}
+	// 		}
+	// 	}
 
-		for _, route := range oldRoutesMap {
-			if _, found := newRoutesMap[route.GetID()]; !found {
-				// delete route
-				err = apiClient.DeleteRouteFromServer(d.Id(), route)
-				if err != nil {
-					return diag.Errorf("Error on detaching route from the server: %s", err)
-				}
-			}
-		}
-	}
+	// 	for _, route := range oldRoutesMap {
+	// 		if _, found := newRoutesMap[route.GetID()]; !found {
+	// 			// delete route
+	// 			err = apiClient.DeleteRouteFromServer(d.Id(), route)
+	// 			if err != nil {
+	// 				return diag.Errorf("Error on detaching route from the server: %s", err)
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	if d.HasChange("host_ids") {
 		oldHosts, newHosts := d.GetChange("host_ids")
