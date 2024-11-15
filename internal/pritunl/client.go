@@ -34,7 +34,6 @@ type Client interface {
 	DetachOrganizationFromServer(organizationId, serverId string) error
 
 	GetRoutesByServer(serverId string) ([]Route, error)
-	//GetRouteByServer(id string, serverId string) (Route, error)
 	AddRouteToServer(serverId string, route Route) (*Route, error)
 	AddRoutesToServer(serverId string, route []Route) error
 	DeleteRouteFromServer(serverId string, route Route) error
