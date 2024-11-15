@@ -3,7 +3,7 @@ package provider
 import (
 	"context"
 
-	"github.com/disc/terraform-provider-pritunl/internal/pritunl"
+	"github.com/maulid7/terraform-provider-pritunl/internal/pritunl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
@@ -41,6 +41,7 @@ func Provider() *schema.Provider {
 			"pritunl_organization": resourceOrganization(),
 			"pritunl_server":       resourceServer(),
 			"pritunl_user":         resourceUser(),
+			"pritunl_route":		resourceRoute(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
 			"pritunl_host":  dataSourceHost(),

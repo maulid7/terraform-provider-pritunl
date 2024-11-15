@@ -34,7 +34,7 @@ type Client interface {
 	DetachOrganizationFromServer(organizationId, serverId string) error
 
 	GetRoutesByServer(serverId string) ([]Route, error)
-	AddRouteToServer(serverId string, route Route) error
+	AddRouteToServer(serverId string, route Route) (*Route, error)
 	AddRoutesToServer(serverId string, route []Route) error
 	DeleteRouteFromServer(serverId string, route Route) error
 	UpdateRouteOnServer(serverId string, route Route) error
@@ -591,7 +591,7 @@ func (c client) GetRoutesByServer(serverId string) ([]Route, error) {
 	return routes, nil
 }
 
-func (c client) AddRouteToServer(serverId string, route Route) error {
+func (c client) AddRouteToServer(serverId string, route Route) (*Route, error) {
 	jsonData, err := json.Marshal(route)
 
 	url := fmt.Sprintf("/server/%s/route", serverId)
@@ -599,16 +599,21 @@ func (c client) AddRouteToServer(serverId string, route Route) error {
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return fmt.Errorf("AddRouteToServer: Error on HTTP request: %s", err)
+		return nil, fmt.Errorf("AddRouteToServer: Error on HTTP request: %s", err)
 	}
 	defer resp.Body.Close()
 
 	body, _ := io.ReadAll(resp.Body)
 	if resp.StatusCode != 200 {
-		return fmt.Errorf("Non-200 response on adding a route to the server\nbody=%s", body)
+		return nil, fmt.Errorf("Non-200 response on adding a route to the server\nbody=%s", body)
 	}
 
-	return nil
+	err = json.Unmarshal(body, &route)
+	if err != nil {
+		return nil, fmt.Errorf("AddRouteToServer: Error on unmarshalling http response: %s", err)
+	}
+
+	return &route, nil
 }
 
 func (c client) AddRoutesToServer(serverId string, routes []Route) error {

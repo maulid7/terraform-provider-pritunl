@@ -1,4 +1,4 @@
-module github.com/disc/terraform-provider-pritunl
+module github.com/maulid7/terraform-provider-pritunl
 
 go 1.22
 

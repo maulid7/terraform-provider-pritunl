@@ -1,9 +1,12 @@
 build:
-	go build -gcflags="all=-N -l" -o ~/.terraform.d/plugins/registry.terraform.io/disc/pritunl/0.0.1/darwin_amd64/terraform-provider-pritunl_v0.0.1 main.go
+	go build -gcflags="all=-N -l" -o ~/.terraform.d/plugins/registry.terraform.io/maulid7/pritunl/0.0.1/darwin_arm64/terraform-provider-pritunl_v0.0.1 main.go
+
+generate-docs:
+	cd tools; go generate .
 
 test:
 	@docker rm tf_pritunl_acc_test -f || true
-	@docker run --name tf_pritunl_acc_test --hostname pritunl.local --rm -d --privileged \
+	@docker run --name tf_pritunl_acc_test --hostname pritunl.local --rm -d --privileged --platform linux/amd64 \
 		-p 1194:1194/udp \
 		-p 1194:1194/tcp \
 		-p 80:80/tcp \
@@ -27,3 +30,11 @@ test:
 	go test -v -cover -count 1 ./internal/provider
 
 	@docker rm tf_pritunl_acc_test -f
+
+test-code:
+	TF_ACC=1 \
+	PRITUNL_URL="https://localhost/" \
+	PRITUNL_INSECURE="true" \
+	PRITUNL_TOKEN=tfacctest_token \
+	PRITUNL_SECRET=tfacctest_secret \
+	go test -v -cover -count 1 -timeout 20m ./internal/provider

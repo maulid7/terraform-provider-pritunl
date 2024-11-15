@@ -7,14 +7,14 @@
 
 # Terraform Provider for Pritunl VPN Server
 
-[![Release](https://img.shields.io/github/v/release/disc/terraform-provider-pritunl)](https://github.com/disc/terraform-provider-pritunl/releases)
-[![Registry](https://img.shields.io/badge/registry-doc%40latest-lightgrey?logo=terraform)](https://registry.terraform.io/providers/disc/pritunl/latest/docs)
-[![License](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://github.com/disc/terraform-provider-pritunl/blob/master/LICENSE)  
-[![Go Report Card](https://goreportcard.com/badge/github.com/disc/terraform-provider-pritunl)](https://goreportcard.com/report/github.com/disc/terraform-provider-pritunl)
+[![Release](https://img.shields.io/github/v/release/maulid7/terraform-provider-pritunl)](https://github.com/maulid7/terraform-provider-pritunl/releases)
+[![Registry](https://img.shields.io/badge/registry-doc%40latest-lightgrey?logo=terraform)](https://registry.terraform.io/providers/maulid7/pritunl/latest/docs)
+[![License](https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg)](https://github.com/maulid7/terraform-provider-pritunl/blob/master/LICENSE)  
+[![Go Report Card](https://goreportcard.com/badge/github.com/maulid7/terraform-provider-pritunl)](https://goreportcard.com/report/github.com/maulid7/terraform-provider-pritunl)
 
 - Website: https://www.terraform.io
 - Pritunl VPN Server: https://pritunl.com/
-- Provider: [disc/pritunl](https://registry.terraform.io/providers/disc/pritunl/latest)
+- Provider: [maulid7/pritunl](https://registry.terraform.io/providers/maulid7/pritunl/latest)
 
 ## Requirements
 -	[Terraform](https://www.terraform.io/downloads.html) >=0.13.x
@@ -23,13 +23,13 @@
 ## Building The Provider
 
 ```sh
-$ git clone git@github.com:disc/terraform-provider-pritunl
+$ git clone git@github.com:maulid7/terraform-provider-pritunl
 $ make build
 ```
 
 ## Example usage
 
-Take a look at the examples in the [documentation](https://registry.terraform.io/providers/disc/pritunl/latest/docs) of the registry
+Take a look at the examples in the [documentation](https://registry.terraform.io/providers/maulid7/pritunl/latest/docs) of the registry
 or use the following example:
 
 
@@ -38,7 +38,7 @@ or use the following example:
 terraform {
   required_providers {
     pritunl = {
-      source  = "disc/pritunl"
+      source  = "maulid7/pritunl"
       version = "0.3.1"
     }
   }

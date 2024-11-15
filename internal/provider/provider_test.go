@@ -2,7 +2,7 @@ package provider
 
 import (
 	"fmt"
-	"github.com/disc/terraform-provider-pritunl/internal/pritunl"
+	"github.com/maulid7/terraform-provider-pritunl/internal/pritunl"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
@@ -80,6 +80,24 @@ func pritunlUserImportStep(name string) resource.TestStep {
 			orgId := state.RootModule().Resources["pritunl_organization.test"].Primary.Attributes["id"]
 
 			return fmt.Sprintf("%s-%s", orgId, userId), nil
+		},
+	}
+
+	return step
+}
+
+// pritunl_route import requires server ID and route ID
+func pritunlRouteImportStep(name string) resource.TestStep {
+	step := resource.TestStep{
+		ResourceName:            name,
+		ImportState:             true,
+		ImportStateVerify:       true,
+		ImportStateVerifyIgnore: []string{"nat"},
+		ImportStateIdFunc: func(state *terraform.State) (string, error) {
+			serverId := state.RootModule().Resources["pritunl_server.test"].Primary.ID
+			routeId := state.RootModule().Resources["pritunl_route.test"].Primary.ID
+
+			return fmt.Sprintf("%s-%s", serverId, routeId), nil
 		},
 	}
 

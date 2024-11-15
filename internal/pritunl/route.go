@@ -5,8 +5,9 @@ import (
 )
 
 type Route struct {
+	ID             string `json:"id,omitempty"`
 	Network        string `json:"network"`
-	Nat            bool   `json:"nat"`
+	Nat            bool   `json:"nat,omitempty"`
 	Comment        string `json:"comment,omitempty"`
 	VirtualNetwork bool   `json:"virtual_network,omitempty"`
 	WgNetwork      string `json:"wg_network,omitempty"`
