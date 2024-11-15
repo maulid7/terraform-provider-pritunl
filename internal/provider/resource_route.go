@@ -12,40 +12,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/validation"
 )
 
-// var (
-// 	routesCache []pritunl.Route
-// 	once        sync.Once
-// )
-
 var resourceMutex sync.RWMutex
-
-// func initRoutesCache(meta interface{}, serverId string) error {
-// 	apiClient := meta.(pritunl.Client)
-// 	var err error
-// 	once.Do(func() {
-// 		fmt.Println("CREATE CACHE")
-// 		routesCache, err = apiClient.GetRoutesByServer(serverId)
-// 		if err != nil {
-// 			return
-// 		}
-// 	})
-// 	return err
-// }
-
-// func clearRouteCache() {
-// 	once = sync.Once{}
-// }
-
-// func getRouteFromCache(id string) pritunl.Route {
-// 	var matchedRoute pritunl.Route
-// 	for _, route := range routesCache {
-// 		if route.ID == id {
-// 			matchedRoute = route
-// 			break
-// 		}
-// 	}
-// 	return matchedRoute
-// }
 
 func getRouteFromList(id string, list []pritunl.Route) pritunl.Route {
 	var matchedRoute pritunl.Route
@@ -125,7 +92,6 @@ func resourceCreateRoute(ctx context.Context, d *schema.ResourceData, meta inter
 	}
 
 	routePayload := pritunl.ConvertMapToRoute(routeData)
-	//fmt.Printf("create: %+v\n", routePayload)
 	
 	// Get latest server status
 	server, err := apiClient.GetServer(d.Get("server_id").(string))
@@ -141,8 +107,6 @@ func resourceCreateRoute(ctx context.Context, d *schema.ResourceData, meta inter
 	if err != nil {
 		return diag.Errorf("Error on stopping server: %s", err)
 	}
-
-	// fmt.Printf("%+v", routePayload)
 
 	route, err := apiClient.AddRouteToServer(serverId, routePayload)
 	if err != nil {
@@ -172,12 +136,6 @@ func resourceReadRoute(ctx context.Context, d *schema.ResourceData, meta interfa
 	// fmt.Println("READ CALLED")
 	apiClient := meta.(pritunl.Client)
 
-	// if err := initRoutesCache(apiClient, d.Get("server_id").(string)); err != nil {
-	// 	return diag.FromErr(err)
-	// }
-
-	// route := getRouteFromCache(d.Id())
-
 	routes, err := apiClient.GetRoutesByServer(d.Get("server_id").(string))
 	if err != nil {
 		return diag.FromErr(err)
@@ -204,12 +162,6 @@ func resourceUpdateRoute(ctx context.Context, d *schema.ResourceData, meta inter
 	if err != nil {
 		return diag.FromErr(err)
 	}
-
-	// if err := initRoutesCache(apiClient, d.Get("server_id").(string)); err != nil {
-	// 	return diag.FromErr(err)
-	// }
-
-	// route := getRouteFromCache(d.Id())
 
 	routes, err := apiClient.GetRoutesByServer(d.Get("server_id").(string))
 	if err != nil {
@@ -269,12 +221,6 @@ func resourceDeleteRoute(ctx context.Context, d *schema.ResourceData, meta inter
 	if err != nil {
 		return diag.FromErr(err)
 	}
-
-	// if err := initRoutesCache(apiClient, d.Get("server_id").(string)); err != nil {
-	// 	return diag.FromErr(err)
-	// }
-
-	// route := getRouteFromCache(d.Id())
 
 	routes, err := apiClient.GetRoutesByServer(d.Get("server_id").(string))
 	if err != nil {

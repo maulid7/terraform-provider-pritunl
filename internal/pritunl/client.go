@@ -592,22 +592,6 @@ func (c client) GetRoutesByServer(serverId string) ([]Route, error) {
 	return routes, nil
 }
 
-// func (c client) GetRouteByServer(id string, serverId string) (Route, error) {
-// 	url := fmt.Sprintf("/server/%s/route", serverId)
-// 	req, err := http.NewRequest("GET", url, nil)
-	
-// 	resp, err := c.httpClient.Do(req)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("GetRouteByServer: Error on HTTP request: %s", err)
-// 	}
-// 	defer resp.Body.Close()
-
-// 	body, _ := io.ReadAll(resp.Body)
-// 	if resp.StatusCode != 200 {
-// 		return nil, fmt.Errorf("Non-200 response on getting routes on the server\nbody=%s", body)
-// 	}
-// }
-
 func (c client) AddRouteToServer(serverId string, route Route) (*Route, error) {
 	jsonData, err := json.Marshal(route)
 
