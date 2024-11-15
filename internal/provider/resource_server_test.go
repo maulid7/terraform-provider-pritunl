@@ -282,94 +282,6 @@ func TestAccPritunlServer(t *testing.T) {
 		})
 	})
 
-	// t.Run("creates a server with routes", func(t *testing.T) {
-	// 	t.Run("with one attached route", func(t *testing.T) {
-	// 		serverName := "tfacc-server1"
-	// 		routeNetwork := "10.5.0.0/24"
-	// 		routeComment := "tfacc-route"
-
-	// 		resource.Test(t, resource.TestCase{
-	// 			PreCheck:          func() { preCheck(t) },
-	// 			ProviderFactories: providerFactories,
-	// 			CheckDestroy:      testPritunlServerDestroy,
-	// 			Steps: []resource.TestStep{
-	// 				{
-	// 					Config: testPritunlServerConfigWithAttachedRoute(serverName, routeNetwork),
-	// 					Check: resource.ComposeTestCheckFunc(
-	// 						resource.TestCheckResourceAttr("pritunl_server.test", "name", serverName),
-
-	// 						func(s *terraform.State) error {
-	// 							actualRouteNetwork := s.RootModule().Resources["pritunl_server.test"].Primary.Attributes["route.0.network"]
-	// 							actualRouteComment := s.RootModule().Resources["pritunl_server.test"].Primary.Attributes["route.0.comment"]
-	// 							if actualRouteNetwork != routeNetwork {
-	// 								return fmt.Errorf("route network is invalid: expected is %s, but actual is %s", routeNetwork, actualRouteNetwork)
-	// 							}
-	// 							if actualRouteComment != routeComment {
-	// 								return fmt.Errorf("route comment is invalid: expected is %s, but actual is %s", routeComment, actualRouteComment)
-	// 							}
-	// 							return nil
-	// 						},
-	// 					),
-	// 				},
-	// 				// import test
-	// 				importStep("pritunl_server.test"),
-	// 			},
-	// 		})
-	// 	})
-
-	// 	t.Run("with a few attached routes", func(t *testing.T) {
-	// 		serverName := "tfacc-server1"
-	// 		route1Network := "10.2.0.0/24"
-	// 		route2Network := "10.3.0.0/24"
-	// 		route3Network := "10.4.0.0/32"
-	// 		routeComment := "tfacc-route"
-
-	// 		resource.Test(t, resource.TestCase{
-	// 			PreCheck:          func() { preCheck(t) },
-	// 			ProviderFactories: providerFactories,
-	// 			CheckDestroy:      testPritunlServerDestroy,
-	// 			Steps: []resource.TestStep{
-	// 				{
-	// 					Config: testPritunlServerConfigWithAFewAttachedRoutes(serverName, route1Network, route2Network, route3Network),
-	// 					Check: resource.ComposeTestCheckFunc(
-	// 						resource.TestCheckResourceAttr("pritunl_server.test", "name", serverName),
-
-	// 						func(s *terraform.State) error {
-	// 							actualRoute1Network := s.RootModule().Resources["pritunl_server.test"].Primary.Attributes["route.0.network"]
-	// 							actualRoute2Network := s.RootModule().Resources["pritunl_server.test"].Primary.Attributes["route.1.network"]
-	// 							actualRoute3Network := s.RootModule().Resources["pritunl_server.test"].Primary.Attributes["route.2.network"]
-	// 							actualRoute1Comment := s.RootModule().Resources["pritunl_server.test"].Primary.Attributes["route.0.comment"]
-	// 							actualRoute2Comment := s.RootModule().Resources["pritunl_server.test"].Primary.Attributes["route.1.comment"]
-	// 							actualRoute3Comment := s.RootModule().Resources["pritunl_server.test"].Primary.Attributes["route.2.comment"]
-	// 							if actualRoute1Network != route1Network {
-	// 								return fmt.Errorf("first route network is invalid: expected is %s, but actual is %s", route1Network, actualRoute1Network)
-	// 							}
-	// 							if actualRoute2Network != route2Network {
-	// 								return fmt.Errorf("second route network is invalid: expected is %s, but actual is %s", route2Network, actualRoute2Network)
-	// 							}
-	// 							if actualRoute3Network != route3Network {
-	// 								return fmt.Errorf("second route network is invalid: expected is %s, but actual is %s", route3Network, actualRoute3Network)
-	// 							}
-	// 							if actualRoute1Comment != routeComment {
-	// 								return fmt.Errorf("first route comment is invalid: expected is %s, but actual is %s", routeComment, actualRoute1Comment)
-	// 							}
-	// 							if actualRoute2Comment != routeComment {
-	// 								return fmt.Errorf("second route comment is invalid: expected is %s, but actual is %s", routeComment, actualRoute2Comment)
-	// 							}
-	// 							if actualRoute3Comment != routeComment {
-	// 								return fmt.Errorf(" route comment is invalid: expected is %s, but actual is %s", routeComment, actualRoute3Comment)
-	// 							}
-	// 							return nil
-	// 						},
-	// 					),
-	// 				},
-	// 				// import test
-	// 				importStep("pritunl_server.test"),
-	// 			},
-	// 		})
-	// 	})
-	// })
-
 	t.Run("creates a server with error", func(t *testing.T) {
 		t.Run("due to an invalid network", func(t *testing.T) {
 			serverName := "tfacc-server1"
@@ -419,23 +331,6 @@ func TestAccPritunlServer(t *testing.T) {
 				},
 			})
 		})
-
-		// t.Run("due to an invalid route", func(t *testing.T) {
-		// 	serverName := "tfacc-server1"
-		// 	invalidRouteNetwork := "10.100.0.2"
-
-		// 	resource.Test(t, resource.TestCase{
-		// 		PreCheck:          func() { preCheck(t) },
-		// 		ProviderFactories: providerFactories,
-		// 		CheckDestroy:      testPritunlServerDestroy,
-		// 		Steps: []resource.TestStep{
-		// 			{
-		// 				Config:      testPritunlServerConfigWithAttachedRoute(serverName, invalidRouteNetwork),
-		// 				ExpectError: regexp.MustCompile(fmt.Sprintf("invalid CIDR address: %s", invalidRouteNetwork)),
-		// 			},
-		// 		},
-		// 	})
-		// })
 
 		t.Run("due to an invalid bind_address", func(t *testing.T) {
 			serverName := "tfacc-server1"
@@ -582,43 +477,6 @@ func testPritunlServerConfigWithAFewAttachedOrganizations(name, organization1Nam
 		}
 	`, name, organization1Name, organization2Name)
 }
-
-// func testPritunlServerConfigWithAttachedRoute(name, route string) string {
-// 	return fmt.Sprintf(`
-// 		resource "pritunl_server" "test" {
-// 			name = "%[1]s"
-
-// 			route {
-// 				network = "%[2]s"
-// 				comment = "tfacc-route"
-// 			}
-// 		}
-// 	`, name, route)
-// }
-
-// func testPritunlServerConfigWithAFewAttachedRoutes(name, route1, route2, route3 string) string {
-// 	return fmt.Sprintf(`
-// 		resource "pritunl_server" "test" {
-// 			name = "%[1]s"
-
-// 			route {
-// 				network = "%[2]s"
-// 				comment = "tfacc-route"
-// 			}
-
-// 			route {
-// 				network = "%[3]s"
-// 				comment = "tfacc-route"
-// 			}
-
-// 			route {
-// 				network = "%[4]s"
-// 				comment = "tfacc-route"
-// 				net_gateway = true
-// 			}
-// 		}
-// 	`, name, route1, route2, route3)
-// }
 
 func testGetServerConfigWithNetworkAndPort(name, network string, port int) string {
 	return fmt.Sprintf(`
