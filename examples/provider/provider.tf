@@ -69,10 +69,3 @@ resource "pritunl_route" "test2" {
   comment = "CF DNS"
   nat     = true
 }
-
-resource "pritunl_route" "test3" {
-  server_id = pritunl_server.test.id
-
-  network = "1.2.3.5/32"
-  nat     = false
-}
