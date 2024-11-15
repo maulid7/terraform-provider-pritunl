@@ -81,9 +81,8 @@ func resourceRoute() *schema.Resource {
 				Type:        schema.TypeBool,
 				Required:    false,
 				Optional:    true,
-				Default:     true,
+				Default:	 true,
 				Description: "NAT vpn traffic destined to this network",
-				Computed:    true,
 			},
 			"net_gateway": {
 				Type:        schema.TypeBool,
