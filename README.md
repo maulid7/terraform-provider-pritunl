@@ -82,30 +82,23 @@ resource "pritunl_server" "example" {
   organization_ids = [
     pritunl_organization.developers.id,
   ]
+}
 
-  # Describe all the routes manually
-  # Default route 0.0.0.0/0 will be deleted on the server creation
-  route {
-    network = "10.0.0.0/24"
-    comment = "Private network #1"
-    nat     = true
-  }
-  
-  route {
-    network = "10.2.0.0/24"
-    comment = "Private network #2"
-    nat     = false
-  }
-  
-  # Or create dynamic routes from variables
-  dynamic "route" {
-    for_each = var.common_routes
-    content {
-        network = route.value["network"]
-        comment = route.value["comment"]
-        nat     = route.value["nat"]
-      }
-  }
+# Create route resources
+resource "pritunl_route" "example1" {
+  server_id = pritunl_server.example.id
+
+  network = "10.0.0.0/24"
+  comment = "Private Network #1"
+  nat     = false
+}
+
+resource "pritunl_route" "example2" {
+  server_id = pritunl_server.example.id
+
+  network = "172.16.0.0/16"
+  comment = "Private Network #2"
+  nat     = true
 }
 ```
 ### Multiple hosts per server (Replicated servers feature)
@@ -198,6 +191,31 @@ Execute the shell command:
 ```sh
 terraform import pritunl_server.example ${SERVER_ID}
 terraform import pritunl_server.example 60cd0bfa7723cf3c911468a8
+```
+
+Import a route:
+
+```hcl
+# Describe a pritunl server resource
+resource "pritunl_server" "example" {
+  name      = "example"
+  port      = 15500
+  protocol  = "udp"
+  network   = "192.168.1.0/24"
+}
+
+resource "pritunl_route" "example" {
+  server_id = pritunl_server.example.id
+  network   = "10.0.0.0/24"
+  comment   = "Private network #1"
+  nat       = true
+}
+```
+
+Execute the shell command:
+```sh
+terraform import pritunl_route.example ${SERVER_ID}-${ROUTE_ID}
+terraform import pritunl_route.example 60cd0bfa7723cf3c911468a8-31302e302e302e302f3234
 ```
 
 ## License

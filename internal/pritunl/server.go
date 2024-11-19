@@ -35,6 +35,7 @@ type Server struct {
 	Groups           []string `json:"groups,omitempty"`
 	MultiDevice      bool     `json:"multi_device,omitempty"`
 	DnsServers       []string `json:"dns_servers,omitempty"`
+	RouteDns		 bool	  `json:"route_dns,omitempty"`
 	SearchDomain     string   `json:"search_domain,omitempty"`
 	InterClient      bool     `json:"inter_client,omitempty"`
 	PingInterval     int      `json:"ping_interval,omitempty"`

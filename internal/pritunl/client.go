@@ -311,6 +311,10 @@ func (c client) CreateServer(serverData map[string]interface{}) (*Server, error)
 		serverStruct.IPv6 = v.(bool)
 	}
 
+	if v, ok := serverData["ipv6_firewall"]; ok {
+		serverStruct.IPv6Firewall = v.(bool)
+	}
+
 	if v, ok := serverData["dh_param_bits"]; ok {
 		serverStruct.DhParamBits = v.(int)
 	}
@@ -401,6 +405,10 @@ func (c client) CreateServer(serverData map[string]interface{}) (*Server, error)
 
 	if v, ok := serverData["dns_mapping"]; ok {
 		serverStruct.DnsMapping = v.(bool)
+	}
+
+	if v, ok := serverData["route_dns"]; ok {
+		serverStruct.RouteDns = v.(bool)
 	}
 
 	if v, ok := serverData["inter_client"]; ok {

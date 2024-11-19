@@ -192,6 +192,12 @@ func resourceServer() *schema.Resource {
 				Optional:    true,
 				Description: "Enter list of DNS servers applied on the client",
 			},
+			"route_dns": {
+				Type:        schema.TypeBool,
+				Required:    false,
+				Optional:    true,
+				Description: "Enable route DNS traffic through VPN",
+			},
 			"sso_auth": {
 				Type:        schema.TypeBool,
 				Required:    false,
@@ -221,6 +227,12 @@ func resourceServer() *schema.Resource {
 				Required:    false,
 				Optional:    true,
 				Description: "Enables IPv6 on server, requires IPv6 network interface",
+			},
+			"ipv6_firewall": {
+				Type:        schema.TypeBool,
+				Required:    false,
+				Optional:    true,
+				Description: "Enables IPv6 Firewall on server when routed IPv6 is used",
 			},
 			"dh_param_bits": {
 				Type:         schema.TypeInt,
@@ -491,6 +503,7 @@ func resourceReadServer(ctx context.Context, d *schema.ResourceData, meta interf
 	d.Set("network", server.Network)
 	d.Set("bind_address", server.BindAddress)
 	d.Set("dns_servers", server.DnsServers)
+	d.Set("route_dns", server.RouteDns)
 	d.Set("network_wg", server.NetworkWG)
 	d.Set("port_wg", server.PortWG)
 	d.Set("sso_auth", server.SsoAuth)
@@ -498,6 +511,7 @@ func resourceReadServer(ctx context.Context, d *schema.ResourceData, meta interf
 	d.Set("device_auth", server.DeviceAuth)
 	d.Set("dynamic_firewall", server.DynamicFirewall)
 	d.Set("ipv6", server.IPv6)
+	d.Set("ipv6_firewall", server.IPv6Firewall)
 	d.Set("dh_param_bits", server.DhParamBits)
 	d.Set("ping_interval", server.PingInterval)
 	d.Set("ping_timeout", server.PingTimeout)
@@ -601,6 +615,7 @@ func resourceCreateServer(ctx context.Context, d *schema.ResourceData, meta inte
 		"bind_address":       d.Get("bind_address"),
 		"groups":             d.Get("groups"),
 		"dns_servers":        d.Get("dns_servers"),
+		"route_dns":		  d.Get("route_dns"),
 		"network_wg":         d.Get("network_wg"),
 		"port_wg":            d.Get("port_wg"),
 		"sso_auth":           d.Get("sso_auth"),
@@ -608,6 +623,7 @@ func resourceCreateServer(ctx context.Context, d *schema.ResourceData, meta inte
 		"device_auth":        d.Get("device_auth"),
 		"dynamic_firewall":   d.Get("dynamic_firewall"),
 		"ipv6":               d.Get("ipv6"),
+		"ipv6_firewall":	  d.Get("ipv6_firewall"),
 		"dh_param_bits":      d.Get("dh_param_bits"),
 		"ping_interval":      d.Get("ping_interval"),
 		"ping_timeout":       d.Get("ping_timeout"),
@@ -763,6 +779,10 @@ func resourceUpdateServer(ctx context.Context, d *schema.ResourceData, meta inte
 		server.IPv6 = d.Get("ipv6").(bool)
 	}
 
+	if d.HasChange("ipv6_firewall") {
+		server.IPv6Firewall = d.Get("ipv6_firewall").(bool)
+	}
+
 	if d.HasChange("dh_param_bits") {
 		server.DhParamBits = d.Get("dh_param_bits").(int)
 	}
@@ -873,6 +893,10 @@ func resourceUpdateServer(ctx context.Context, d *schema.ResourceData, meta inte
 			dnsServers = append(dnsServers, v.(string))
 		}
 		server.DnsServers = dnsServers
+	}
+
+	if d.HasChange("route_dns") {
+		server.RouteDns = d.Get("route_dns").(bool)
 	}
 
 	// Stop server before applying any change
