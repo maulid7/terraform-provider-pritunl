@@ -37,6 +37,7 @@ The server resource allows managing information about a particular Pritunl serve
 - `inactive_timeout` (Number) Disconnects users after the specified number of seconds of inactivity.
 - `inter_client` (Boolean) Enable inter-client routing across hosts.
 - `ipv6` (Boolean) Enables IPv6 on server, requires IPv6 network interface
+- `ipv6_firewall` (Boolean) Enables IPv6 Firewall on server when routed IPv6 is used
 - `link_ping_interval` (Number) Time in between pings used when multiple users have the same network link to failover to another user when one network link fails.
 - `link_ping_timeout` (Number) Optional, ping timeout used when multiple users have the same network link to failover to another user when one network link fails..
 - `max_clients` (Number) Maximum number of clients connected to a server or to each server replica.
@@ -58,6 +59,7 @@ The server resource allows managing information about a particular Pritunl serve
 - `protocol` (String) The protocol for the server
 - `replica_count` (Number) Replicate server across multiple hosts.
 - `restrict_routes` (Boolean) Prevent traffic from networks not specified in the servers routes from being tunneled over the vpn.
+- `route_dns` (Boolean) Enable route DNS traffic through VPN
 - `search_domain` (String) DNS search domain for clients. Separate multiple search domains by a comma.
 - `session_timeout` (Number) Disconnect users after the specified number of seconds.
 - `sso_auth` (Boolean) Require client to authenticate with single sign-on provider on each connection using web browser. Requires client to have access to Pritunl web server port and running updated Pritunl Client. Single sign-on provider must already be configured for this feature to work properly

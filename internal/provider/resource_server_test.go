@@ -406,6 +406,35 @@ func TestAccPritunlServer(t *testing.T) {
 			})
 		})
 	})
+
+	t.Run("creates a server with route_dns attribute", func(t *testing.T) {
+		serverName := "tfacc-server1"
+
+		testCase := func(t *testing.T, routeDns bool) {
+			resource.Test(t, resource.TestCase{
+				PreCheck:          func() { preCheck(t) },
+				ProviderFactories: providerFactories,
+				CheckDestroy:      testPritunlServerDestroy,
+				Steps: []resource.TestStep{
+					{
+						Config: testPritunlServerConfigWithRouteDNS(serverName, routeDns),
+						Check: resource.ComposeTestCheckFunc(
+							resource.TestCheckResourceAttr("pritunl_server.test", "name", serverName),
+							resource.TestCheckResourceAttr("pritunl_server.test", "route_dns", strconv.FormatBool(routeDns)),
+						),
+					},
+				},
+			})
+		}
+
+		t.Run("with enabled option", func(t *testing.T) {
+			testCase(t, true)
+		})
+
+		t.Run("with disabled option", func(t *testing.T) {
+			testCase(t, false)
+		})
+	})
 }
 
 func testPritunlServerSimpleConfig(name string) string {
@@ -508,6 +537,15 @@ func testPritunlServerConfigWithGroups(name string, groupName string) string {
 			groups    = ["%[2]s"]
 		}
 	`, name, groupName)
+}
+
+func testPritunlServerConfigWithRouteDNS(name string, routeDns bool) string {
+	return fmt.Sprintf(`
+		resource "pritunl_server" "test" {
+			name    	 = "%[1]s"
+			route_dns    = %[2]t
+		}
+	`, name, routeDns)
 }
 
 func testPritunlServerDestroy(s *terraform.State) error {
