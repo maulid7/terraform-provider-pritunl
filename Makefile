@@ -12,7 +12,7 @@ test:
 		-p 80:80/tcp \
 		-p 443:443/tcp \
 		-p 27017:27017/tcp \
-		ghcr.io/jippi/docker-pritunl:1.32.3602.80
+		ghcr.io/jippi/docker-pritunl:1.32.3805.95
 
 	sleep 20
 
